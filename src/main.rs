@@ -1,17 +1,17 @@
 #[macro_use]
 extern crate log;
 
+mod database;
+
+use crate::database::account::{mutation::Mutation, query::Query};
 use actix_web::web::Data;
 use actix_web::{guard, middleware, web, App, HttpRequest, HttpServer, Responder};
 use anyhow::Result;
-use async_graphql::{Context, EmptySubscription, FieldResult, Object, Schema, ID};
+use async_graphql::{EmptySubscription, Schema};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 use dotenv::dotenv;
-use model::Account;
 use sqlx::postgres::PgPool;
 use std::env;
-
-mod model;
 
 async fn ping(_req: HttpRequest) -> impl Responder {
     format!(
@@ -19,68 +19,6 @@ async fn ping(_req: HttpRequest) -> impl Responder {
         env!("CARGO_PKG_DESCRIPTION"),
         env!("CARGO_PKG_VERSION")
     )
-}
-
-struct Query;
-
-#[Object(extends)]
-impl Query {
-    async fn accounts<'a>(&self, ctx: &'a Context<'_>) -> FieldResult<Vec<Account>> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        let rows = Account::read_all(&pool).await?;
-        Ok(rows)
-    }
-
-    async fn account<'a>(&self, ctx: &'a Context<'_>, id: String) -> FieldResult<Account> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        let row = Account::read_one(&pool, &id).await?;
-        Ok(row)
-    }
-
-    #[graphql(entity)]
-    async fn find_account_by_id<'a>(&self, ctx: &'a Context<'_>, id: String) -> FieldResult<Account> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        let row = Account::read_one(&pool, &id).await?;
-        Ok(row)
-    }
-}
-
-pub struct Mutation;
-
-#[Object]
-impl Mutation {
-    async fn create_account(
-        &self,
-        ctx: &Context<'_>,
-        login: String,
-        password: String,
-        privileges: String,
-    ) -> FieldResult<Account> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        let row = Account::create(&pool, &login, &password, &privileges).await?;
-        Ok(row)
-    }
-
-    async fn delete_account(&self, ctx: &Context<'_>, id: ID) -> FieldResult<bool> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        let id = id.parse::<String>()?;
-
-        Account::delete(&pool, &id).await?;
-        Ok(true)
-    }
-
-    async fn update_account(
-        &self,
-        ctx: &Context<'_>,
-        id: ID,
-        password: String,
-    ) -> FieldResult<Account> {
-        let pool = ctx.data::<PgPool>().unwrap();
-        let id = id.parse::<String>()?;
-
-        let row = Account::update(&pool, &id, &password).await?;
-        Ok(row)
-    }
 }
 
 type ServiceSchema = Schema<Query, Mutation, EmptySubscription>;

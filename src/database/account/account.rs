@@ -9,6 +9,7 @@ CREATE TABLE Account (
   id    UUID NOT NULL DEFAULT gen_random_uuid(),
   login         varchar(255) NOT NULL,
   password    varchar(255) NOT NULL,
+  email       varchar(255) NOT NULL,
   privileges varchar(255) NOT NULL,
   CONSTRAINT id
     PRIMARY KEY (id));
@@ -19,21 +20,23 @@ pub struct Account {
     pub id: uuid::Uuid,
     login: String,
     password: String,
+    email: String,
     privileges: String,
 }
 
 impl Account {
-
     pub async fn create(
         pool: &PgPool,
         login: &str,
         password: &str,
+        email: &str,
         privileges: &str,
     ) -> Result<Account> {
         let row = sqlx::query!(
-            "INSERT INTO account(Login, password, privileges) VALUES ($1, $2, $3) RETURNING id",
+            "INSERT INTO account(Login, password, email, privileges) VALUES ($1, $2, $3, $4) RETURNING id",
             login,
             password,
+            email,
             privileges
         )
         .fetch_one(pool)
@@ -43,6 +46,7 @@ impl Account {
             id: row.id,
             login: login.to_string(),
             password: password.to_string(),
+            email: email.to_string(),
             privileges: privileges.to_string(),
         })
     }

@@ -17,3 +17,5 @@ serde = "1.0.131"
 tokio = { version = "1.14.0", features = ["full"] }
 sqlx = { version = "0.5.9", features = ["runtime-actix-native-tls","uuid","postgres","chrono"] }
 uuid = { version = "0.8.2", features = ["serde","v4"] }
+pbkdf2 = "0.10"
+rand_core = { version = "0.6", features = ["std"] }
