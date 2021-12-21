@@ -1,11 +1,13 @@
-use crate::database::account::account::Account;
+use crate::database::{account::account::Account, Mutation};
 use async_graphql::{Context, FieldResult, Object, ID};
-use pbkdf2::{password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString}, Pbkdf2};
+use pbkdf2::{
+    password_hash::{PasswordHash, PasswordHasher, PasswordVerifier, SaltString},
+    Pbkdf2,
+};
 use rand_core::OsRng;
 use sqlx::PgPool;
-pub struct Mutation;
 
-#[Object]
+#[Object(extends)]
 impl Mutation {
     async fn create_account(
         &self,
@@ -20,11 +22,15 @@ impl Mutation {
         let salt = SaltString::generate(&mut OsRng);
 
         // Hash password to PHC string ($pbkdf2-sha256$...)
-        let password_hash = Pbkdf2.hash_password(password.as_bytes(), &salt)?.to_string();
+        let password_hash = Pbkdf2
+            .hash_password(password.as_bytes(), &salt)?
+            .to_string();
 
         // Verify password against PHC string
         let parsed_hash = PasswordHash::new(&password_hash)?;
-        Pbkdf2.verify_password(password.as_bytes(), &parsed_hash).ok();
+        Pbkdf2
+            .verify_password(password.as_bytes(), &parsed_hash)
+            .ok();
 
         let row = Account::create(&pool, &login, &password_hash, &email, &privileges).await?;
         Ok(row)
@@ -50,11 +56,15 @@ impl Mutation {
         let salt = SaltString::generate(&mut OsRng);
 
         // Hash password to PHC string ($pbkdf2-sha256$...)
-        let password_hash = Pbkdf2.hash_password(password.as_bytes(), &salt)?.to_string();
+        let password_hash = Pbkdf2
+            .hash_password(password.as_bytes(), &salt)?
+            .to_string();
 
         // Verify password against PHC string
         let parsed_hash = PasswordHash::new(&password_hash)?;
-        Pbkdf2.verify_password(password.as_bytes(), &parsed_hash).ok();
+        Pbkdf2
+            .verify_password(password.as_bytes(), &parsed_hash)
+            .ok();
 
         let row = Account::update(&pool, &id, &password_hash).await?;
         Ok(row)

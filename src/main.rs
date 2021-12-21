@@ -3,7 +3,7 @@ extern crate log;
 
 mod database;
 
-use crate::database::account::{mutation::Mutation, query::Query};
+use crate::database::{Mutation, Query};
 use actix_web::web::Data;
 use actix_web::{guard, middleware, web, App, HttpRequest, HttpServer, Responder};
 use anyhow::Result;
