@@ -1,4 +1,3 @@
--- Add up migration script here
 CREATE TABLE ACCOUNT (
   ID    UUID NOT NULL DEFAULT gen_random_uuid(),
   LOGIN         varchar(255) NOT NULL,

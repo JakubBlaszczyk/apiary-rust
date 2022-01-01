@@ -1,6 +1,9 @@
-use crate::database::{account::account::Account, Query};
 use async_graphql::{Context, FieldResult, Object};
 use sqlx::PgPool;
+
+use crate::account::Account;
+
+pub struct Query;
 
 #[Object(extends)]
 impl Query {

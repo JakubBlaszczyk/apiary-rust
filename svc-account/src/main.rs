@@ -1,10 +1,12 @@
 #[macro_use]
 extern crate log;
 
-mod database;
+mod mutation;
+mod query;
+mod account;
 
-use crate::database::{Mutation, Query};
-use actix_web::web::Data;
+use query::Query;
+use mutation::Mutation;
 use actix_web::{guard, middleware, web, App, HttpRequest, HttpServer, Responder};
 use anyhow::Result;
 use async_graphql::{EmptySubscription, Schema};
@@ -43,7 +45,7 @@ async fn main() -> Result<()> {
 
     let server = HttpServer::new(move || {
         App::new()
-            .app_data(Data::new(schema.clone()))
+            .app_data(web::Data::new(schema.clone()))
             .wrap(middleware::Logger::default())
             .service(web::resource("/").guard(guard::Post()).to(index))
             .route("/ping", web::get().to(ping))

@@ -71,10 +71,31 @@ impl Account {
         Ok(rows)
     }
 
-    pub async fn update(pool: &PgPool, id: &str, password: &str) -> Result<Account> {
+    pub async fn update(
+        pool: &PgPool,
+        id: &str,
+        password: Option<&String>,
+        login: Option<&String>,
+        email: Option<&String>,
+    ) -> Result<Account> {
+        let temp = Account::read_one(pool, id).await?;
+        let result_password = match password {
+            Some(x) => x,
+            None => &temp.password,
+        };
+        let result_email = match email {
+            Some(x) => x,
+            None => &temp.email,
+        };
+        let result_login = match login {
+            Some(x) => x,
+            None => &temp.login,
+        };
         sqlx::query!(
-            "UPDATE account SET password=$1 WHERE id = $2",
-            password,
+            "UPDATE account SET password=$1, login=$2, email=$3  WHERE id = $4",
+            result_password,
+            result_login,
+            result_email,
             Uuid::parse_str(id)?
         )
         .execute(pool)

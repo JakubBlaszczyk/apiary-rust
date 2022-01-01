@@ -1,0 +1,5 @@
+subgraphs:
+  accounts:
+    routing_url: http://localhost:8080
+    schema:
+      subgraph_url: http://localhost:8080
