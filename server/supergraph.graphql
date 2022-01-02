@@ -27,16 +27,29 @@ type Account
   privileges: String! @join__field(graph: ACCOUNTS)
 }
 
+type Apiary
+  @join__owner(graph: APIARY)
+  @join__type(graph: APIARY, key: "id")
+{
+  id: Int! @join__field(graph: APIARY)
+  information: String @join__field(graph: APIARY)
+  localization: String @join__field(graph: APIARY)
+}
+
 type Mutation {
   createAccount(email: String!, login: String!, password: String!, privileges: String!): Account! @join__field(graph: ACCOUNTS)
+  createApiary(information: String, localization: String): Apiary! @join__field(graph: APIARY)
   deleteAccount(id: ID!): Boolean! @join__field(graph: ACCOUNTS)
-  doNothing(nothing: String!): String! @join__field(graph: ACCOUNTS)
+  deleteApiary(id: ID!): Boolean! @join__field(graph: APIARY)
   updateAccount(email: String, id: ID!, login: String, password: String): Account! @join__field(graph: ACCOUNTS)
+  updateApiary(id: ID!, information: String, localization: String): Apiary! @join__field(graph: APIARY)
 }
 
 type Query {
   account(id: String!): Account! @join__field(graph: ACCOUNTS)
   accounts: [Account!]! @join__field(graph: ACCOUNTS)
+  apiaries: [Apiary!]! @join__field(graph: APIARY)
+  apiary(id: String!): Apiary! @join__field(graph: APIARY)
 }
 
 """
@@ -67,4 +80,5 @@ scalar join__FieldSet
 
 enum join__Graph {
   ACCOUNTS @join__graph(name: "accounts" url: "http://localhost:8080")
+  APIARY @join__graph(name: "apiary" url: "http://localhost:8081")
 }
