@@ -1,5 +1,5 @@
 subgraphs:
-  accounts:
+  account:
     routing_url: http://localhost:8080
     schema:
       subgraph_url: http://localhost:8080
@@ -7,3 +7,7 @@ subgraphs:
     routing_url: http://localhost:8081
     schema:
       subgraph_url: http://localhost:8081
+  event:
+    routing_url: http://localhost:8082
+    schema:
+      subgraph_url: http://localhost:8082

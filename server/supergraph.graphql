@@ -17,14 +17,14 @@ directive @join__owner(graph: join__Graph!) on INTERFACE | OBJECT
 directive @join__type(graph: join__Graph!, key: join__FieldSet) repeatable on INTERFACE | OBJECT
 
 type Account
-  @join__owner(graph: ACCOUNTS)
-  @join__type(graph: ACCOUNTS, key: "id")
+  @join__owner(graph: ACCOUNT)
+  @join__type(graph: ACCOUNT, key: "id")
 {
-  email: String! @join__field(graph: ACCOUNTS)
-  id: UUID! @join__field(graph: ACCOUNTS)
-  login: String! @join__field(graph: ACCOUNTS)
-  password: String! @join__field(graph: ACCOUNTS)
-  privileges: String! @join__field(graph: ACCOUNTS)
+  email: String! @join__field(graph: ACCOUNT)
+  id: UUID! @join__field(graph: ACCOUNT)
+  login: String! @join__field(graph: ACCOUNT)
+  password: String! @join__field(graph: ACCOUNT)
+  privileges: String! @join__field(graph: ACCOUNT)
 }
 
 type Apiary
@@ -36,20 +36,45 @@ type Apiary
   localization: String @join__field(graph: APIARY)
 }
 
-type Mutation {
-  createAccount(email: String!, login: String!, password: String!, privileges: String!): Account! @join__field(graph: ACCOUNTS)
-  createApiary(information: String, localization: String): Apiary! @join__field(graph: APIARY)
-  deleteAccount(id: ID!): Boolean! @join__field(graph: ACCOUNTS)
-  deleteApiary(id: ID!): Boolean! @join__field(graph: APIARY)
-  updateAccount(email: String, id: ID!, login: String, password: String): Account! @join__field(graph: ACCOUNTS)
-  updateApiary(id: ID!, information: String, localization: String): Apiary! @join__field(graph: APIARY)
+type Event
+  @join__owner(graph: EVENT)
+  @join__type(graph: EVENT, key: "id")
+{
+  id: Int! @join__field(graph: EVENT)
+  idApiary: Int! @join__field(graph: EVENT)
+  note: String @join__field(graph: EVENT)
+  timeEnd: NaiveDateTime @join__field(graph: EVENT)
+  timeStart: NaiveDateTime @join__field(graph: EVENT)
 }
 
+type Mutation {
+  createAccount(email: String!, login: String!, password: String!, privileges: String!): Account! @join__field(graph: ACCOUNT)
+  createApiary(information: String, localization: String): Apiary! @join__field(graph: APIARY)
+  createEvent(idApiary: Int!, note: String, timeStart: NaiveDateTime): Event! @join__field(graph: EVENT)
+  deleteAccount(id: ID!): Boolean! @join__field(graph: ACCOUNT)
+  deleteApiary(id: ID!): Boolean! @join__field(graph: APIARY)
+  deleteEvent(id: ID!): Boolean! @join__field(graph: EVENT)
+  updateAccount(email: String, id: ID!, login: String, password: String): Account! @join__field(graph: ACCOUNT)
+  updateApiary(id: ID!, information: String, localization: String): Apiary! @join__field(graph: APIARY)
+  updateEvent(id: ID!, idApiary: Int, note: String, timeEnd: NaiveDateTime, timeStart: NaiveDateTime): Event! @join__field(graph: EVENT)
+}
+
+"""
+ISO 8601 combined date and time without timezone.
+
+# Examples
+
+* `2015-07-01T08:59:60.123`,
+"""
+scalar NaiveDateTime
+
 type Query {
-  account(id: String!): Account! @join__field(graph: ACCOUNTS)
-  accounts: [Account!]! @join__field(graph: ACCOUNTS)
+  account(id: String!): Account! @join__field(graph: ACCOUNT)
+  accounts: [Account!]! @join__field(graph: ACCOUNT)
   apiaries: [Apiary!]! @join__field(graph: APIARY)
   apiary(id: String!): Apiary! @join__field(graph: APIARY)
+  event(id: String!): Event! @join__field(graph: EVENT)
+  events: [Event!]! @join__field(graph: EVENT)
 }
 
 """
@@ -79,6 +104,7 @@ enum core__Purpose {
 scalar join__FieldSet
 
 enum join__Graph {
-  ACCOUNTS @join__graph(name: "accounts" url: "http://localhost:8080")
+  ACCOUNT @join__graph(name: "account" url: "http://localhost:8080")
   APIARY @join__graph(name: "apiary" url: "http://localhost:8081")
+  EVENT @join__graph(name: "event" url: "http://localhost:8082")
 }
