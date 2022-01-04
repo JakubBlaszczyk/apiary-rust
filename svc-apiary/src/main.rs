@@ -1,9 +1,10 @@
 #[macro_use]
 extern crate log;
 
+mod apiary;
 mod mutation;
 mod query;
-mod apiary;
+mod role_guard;
 
 use actix_web::web::Data;
 use actix_web::{guard, middleware, web, App, HttpRequest, HttpServer, Responder};
@@ -11,10 +12,10 @@ use anyhow::Result;
 use async_graphql::{EmptySubscription, Schema};
 use async_graphql_actix_web::{GraphQLRequest, GraphQLResponse};
 use dotenv::dotenv;
-use sqlx::postgres::PgPool;
-use std::env;
 use mutation::Mutation;
 use query::Query;
+use sqlx::postgres::PgPool;
+use std::env;
 
 async fn ping(_req: HttpRequest) -> impl Responder {
     format!(
