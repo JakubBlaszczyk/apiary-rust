@@ -4,7 +4,6 @@ extern crate log;
 mod apiary;
 mod mutation;
 mod query;
-mod role_guard;
 
 use actix_web::web::Data;
 use actix_web::{guard, middleware, web, App, HttpRequest, HttpServer, Responder};

@@ -5,7 +5,6 @@ pub struct Mutation;
 
 #[Object(extends)]
 impl Mutation {
-    #[graphql(guard = "RoleGuard::new(Role::Admin).or(RoleGuard::new(Role::Beekeeper))")]
     async fn create_apiary(
         &self,
         ctx: &Context<'_>,
@@ -18,7 +17,6 @@ impl Mutation {
         Ok(row)
     }
 
-    #[graphql(guard = "RoleGuard::new(Role::Admin).or(RoleGuard::new(Role::Beekeeper))")]
     async fn delete_apiary(&self, ctx: &Context<'_>, id: ID) -> FieldResult<bool> {
         let pool = ctx.data::<PgPool>().unwrap();
         let id = id.parse::<String>()?;
@@ -27,7 +25,6 @@ impl Mutation {
         Ok(true)
     }
 
-    #[graphql(guard = "RoleGuard::new(Role::Admin).or(RoleGuard::new(Role::Beekeeper))")]
     async fn update_apiary(
         &self,
         ctx: &Context<'_>,
