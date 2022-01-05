@@ -9,6 +9,7 @@ do
   cargo run &
   cd ..
 done
-cd ../server
+cd server
 sleep 30
 rover supergraph compose --config ./supergraph-config.yaml > supergraph.graphql
+echo "Done"

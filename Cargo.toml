@@ -3,4 +3,5 @@ members = [
   "svc-account",
   "svc-apiary",
   "svc-event",
+  "svc-account-apiary",
 ]

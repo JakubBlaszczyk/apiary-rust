@@ -27,6 +27,14 @@ type Account
   privileges: String! @join__field(graph: ACCOUNT)
 }
 
+type AccountApiary
+  @join__owner(graph: ACCOUNT_APIARY)
+  @join__type(graph: ACCOUNT_APIARY, key: "idAccount idApiary")
+{
+  idAccount: UUID! @join__field(graph: ACCOUNT_APIARY)
+  idApiary: Int! @join__field(graph: ACCOUNT_APIARY)
+}
+
 type Apiary
   @join__owner(graph: APIARY)
   @join__type(graph: APIARY, key: "id")
@@ -49,9 +57,11 @@ type Event
 
 type Mutation {
   createAccount(email: String!, login: String!, password: String!, privileges: String!): Account! @join__field(graph: ACCOUNT)
+  createAccountApiary(idAccount: String!, idApiary: Int!): AccountApiary! @join__field(graph: ACCOUNT_APIARY)
   createApiary(information: String, localization: String): Apiary! @join__field(graph: APIARY)
   createEvent(idApiary: Int!, note: String, timeStart: NaiveDateTime): Event! @join__field(graph: EVENT)
   deleteAccount(id: ID!): Boolean! @join__field(graph: ACCOUNT)
+  deleteAccountApiary(idAccount: String!, idApiary: Int!): Boolean! @join__field(graph: ACCOUNT_APIARY)
   deleteApiary(id: ID!): Boolean! @join__field(graph: APIARY)
   deleteEvent(id: ID!): Boolean! @join__field(graph: EVENT)
   updateAccount(email: String, id: ID!, login: String, password: String): Account! @join__field(graph: ACCOUNT)
@@ -70,7 +80,9 @@ scalar NaiveDateTime
 
 type Query {
   account(id: String!): Account! @join__field(graph: ACCOUNT)
+  accountApiary(idAccount: String, idApiary: Int): [AccountApiary!]! @join__field(graph: ACCOUNT_APIARY)
   accounts: [Account!]! @join__field(graph: ACCOUNT)
+  accountsApiaries: [AccountApiary!]! @join__field(graph: ACCOUNT_APIARY)
   apiaries: [Apiary!]! @join__field(graph: APIARY)
   apiary(id: String!): Apiary! @join__field(graph: APIARY)
   event(id: String!): Event! @join__field(graph: EVENT)
@@ -105,6 +117,7 @@ scalar join__FieldSet
 
 enum join__Graph {
   ACCOUNT @join__graph(name: "account" url: "http://localhost:8080")
+  ACCOUNT_APIARY @join__graph(name: "account_apiary" url: "http://localhost:8083")
   APIARY @join__graph(name: "apiary" url: "http://localhost:8081")
   EVENT @join__graph(name: "event" url: "http://localhost:8082")
 }

@@ -11,3 +11,7 @@ subgraphs:
     routing_url: http://localhost:8082
     schema:
       subgraph_url: http://localhost:8082
+  account_apiary:
+    routing_url: http://localhost:8083
+    schema:
+      subgraph_url: http://localhost:8083
