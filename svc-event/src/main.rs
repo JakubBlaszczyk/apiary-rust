@@ -50,6 +50,7 @@ async fn main() -> Result<()> {
             .wrap(middleware::Logger::default())
             .service(web::resource("/").guard(guard::Post()).to(index))
             .route("/ping", web::get().to(ping))
+            .service(actix_files::Files::new("/static", "./static/").show_files_listing())
     });
 
     info!("Starting server");

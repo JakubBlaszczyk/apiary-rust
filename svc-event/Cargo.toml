@@ -6,6 +6,7 @@ edition = "2021"
 
 [dependencies]
 actix-web = "4.0.0-beta.14"
+actix-files = "0.6.0-beta.4"
 anyhow = "1.0.51"
 async-graphql = {version = "3.0.15", default-features = false, features = ["chrono"] }
 async-graphql-actix-web = "3.0.15"
