@@ -35,7 +35,14 @@ impl Mutation {
       .verify_password(password.as_bytes(), &parsed_hash)
       .ok();
 
-    let row = Account::create(&pool, &login, &password_hash, &email, &privileges.unwrap_or(String::from("beekeeper"))).await?;
+    let row = Account::create(
+      &pool,
+      &login,
+      &password_hash,
+      &email,
+      &privileges.unwrap_or(String::from("beekeeper")),
+    )
+    .await?;
     Ok(row)
   }
 
