@@ -1,5 +1,6 @@
 [workspace]
 members = [
+  "common-utils",
   "svc-account",
   "svc-apiary",
   "svc-event",
