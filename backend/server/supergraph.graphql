@@ -56,7 +56,7 @@ type Event
 }
 
 type Mutation {
-  createAccount(email: String!, login: String!, password: String!, privileges: String!): Account! @join__field(graph: ACCOUNT)
+  createAccount(email: String!, login: String!, password: String!, privileges: String): Account! @join__field(graph: ACCOUNT)
   createAccountApiary(idAccount: String!, idApiary: Int!): AccountApiary! @join__field(graph: ACCOUNT_APIARY)
   createApiary(information: String, localization: String): Apiary! @join__field(graph: APIARY)
   createEvent(idApiary: Int!, note: String, timeStart: NaiveDateTime): Event! @join__field(graph: EVENT)
